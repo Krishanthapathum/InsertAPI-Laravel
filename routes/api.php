@@ -19,9 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API working']);
-});
+// Route::get('/test', function () {
+//     return response()->json(['message' => 'API working']);
+// });
 
 
 Route::post('/store-user', [PermitUserController::class, 'store']);
