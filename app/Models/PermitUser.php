@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class PermitUser extends Model
 {
     protected $fillable = [
-        'surname',
-        'other_names',
-        'date_of_birth',
-        'sl_license_number',
-        'international_permit_number',
-        'issued_date',
-        'expiry_date',
-        'valid_vehicles'
+        'last_name',
+        'first_names',
+        'dob',
+        'sl_license_no',
+        'int_permit_no',
+        'date_issued',
+        'date_expiry',
+        'vehicle_types'
     ];
+
 
 }
