@@ -25,3 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::post('/store-user', [PermitUserController::class, 'store']);
+
+Route::get('/user-by-permit/{int_permit_no}', [PermitUserController::class, 'findByPermit']);
+
+// Route::middleware(['auth:sanctum'])->get('/user-by-permit/{int_permit_no}', [PermitUserController::class, 'findByPermit']);
+
