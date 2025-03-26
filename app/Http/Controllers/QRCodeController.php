@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\PermitUser;
+use PDF;
+
 
 class QRCodeController extends Controller
 {
@@ -68,6 +70,13 @@ class QRCodeController extends Controller
         }
 
         return view('qr.user', compact('user'));
+    }
+
+    public function exportPDF()
+    {
+        $users = PermitUser::whereNotNull('qr_code_identifier')->get();
+        $pdf = PDF::loadView('qr.pdf', compact('users'));
+        return $pdf->download('permit_qr_codes.pdf');
     }
 
 
