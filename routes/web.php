@@ -25,6 +25,11 @@ Route::get('/dashboard', function () {
 Route::get('/qr', [QRCodeController::class, 'index'])->name('qr.index');
 Route::post('/qr/generate', [QRCodeController::class, 'generate'])->name('qr.generate');
 
-// web.php
 Route::get('/user/{identifier}', [QRCodeController::class, 'showUserByQr'])->name('qr.show');
 
+Route::get('/generated-qrs', function () {
+    $users = \App\Models\PermitUser::whereNotNull('qr_code_identifier')->get();
+    return view('qr.generated', compact('users'));
+})->name('qr.generated.view');
+
+Route::get('/qr/export/pdf', [QRCodeController::class, 'exportPDF'])->name('qr.export.pdf');
