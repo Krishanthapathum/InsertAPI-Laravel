@@ -36,7 +36,7 @@
                 <input type="text" id="searchBox" class="form-control" placeholder="Search by name or permit...">
             </div>
             <div class="col-md-8 text-end">
-                <a href="{{ route('qr.export.pdf') }}" class="btn btn-outline-danger me-2">Export to PDF 🧾</a>
+                {{-- <a href="{{ route('qr.export.pdf') }}" class="btn btn-outline-danger me-2">Export to PDF 🧾</a> --}}
                 {{-- <button class="btn btn-outline-secondary" onclick="window.print()">Print Cards 🖨️</button> --}}
             </div>
         </div>
