@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +15,21 @@ use App\Http\Controllers\QRCodeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
 Route::get('/user/{identifier}', [QRCodeController::class, 'showUserByQr'])->name('qr.show');
 
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/qr', [QRCodeController::class, 'index'])->name('qr.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/', [QRCodeController::class, 'index'])->name('qr.index');
 
-Route::post('/qr/generate', [QRCodeController::class, 'generate'])->name('qr.generate');
+    Route::post('/qr/fetch-selected', [QRCodeController::class, 'fetchSelectedForPrint'])->name('qr.fetch.selected');
 
-Route::get('/generated-qrs', [QRCodeController::class, 'listGeneratedUsers'])->name('qr.generated.view');
+    Route::post('/qr-code/mark-printed', [App\Http\Controllers\QRCodeController::class, 'markAsPrinted'])
+        ->name('qr.markAsPrinted');
+});

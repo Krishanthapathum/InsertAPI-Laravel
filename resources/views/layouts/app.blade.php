@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Permit Holder Details</title>
+    <title>AACeylon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -92,6 +92,28 @@
 
 <body class="{{ request()->routeIs('qr.show') ? 'body-dark' : 'body-light' }} d-flex flex-column min-vh-100">
 
+    <!-- Light Topbar with Logout -->
+    <div class="bg-dark py-1">
+        <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
+            @if (Auth::check())
+                <div class="text-white small">
+                    👋 Hi, {{ Auth::user()->name }}
+                </div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-sm text-white" style="font-size: 13px; font-weight: 300;">
+                       Logout
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+
+
+
+
+    <!-- Main Dark Header -->
     <header>
         <div class="container py-2">
             <div class="d-flex align-items-center justify-content-between">
@@ -113,6 +135,7 @@
             </div>
         </div>
     </header>
+
 
     @yield('content')
 
@@ -140,6 +163,7 @@
             </div>
         </div>
     </footer>
+    @stack('scripts')
 
 </body>
 
