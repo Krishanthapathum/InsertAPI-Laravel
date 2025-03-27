@@ -1,35 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>QR Code Generator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.app')
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        h3 {
-            margin-top: 30px;
-        }
-
-        table th,
-        table td {
-            vertical-align: middle !important;
-        }
-    </style>
-</head>
-
-<body>
-
+@section('content')
     <div class="container mt-5">
-        <h3 class="text-center fw-bold">Generate QR Codes for Permit Users</h3>
+        {{-- <h3 class="text-center fw-bold">Generate QR Codes for Permit Users</h3> --}}
 
         <div class="row mt-4 mb-3">
             <div class="col-md-4">
@@ -100,14 +74,14 @@
             checkboxes.forEach(cb => cb.checked = this.checked);
         });
 
-        // Search Filter
+        // Search Filter (corrected column indexes)
         document.getElementById('searchBox').addEventListener('keyup', function() {
             const value = this.value.toLowerCase();
             const rows = document.querySelectorAll('#userTable tbody tr');
 
             rows.forEach(row => {
-                const name = row.cells[1].textContent.toLowerCase();
-                const permit = row.cells[2].textContent.toLowerCase();
+                const name = row.cells[2].textContent.toLowerCase();
+                const permit = row.cells[3].textContent.toLowerCase();
 
                 if (name.includes(value) || permit.includes(value)) {
                     row.style.display = '';
@@ -118,6 +92,5 @@
         });
     </script>
 
-</body>
 
-</html>
+@endsection

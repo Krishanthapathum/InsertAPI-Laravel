@@ -61,6 +61,26 @@ class QRCodeController extends Controller
         return view('qr.generated', compact('qrData'));
     }
 
+    public function listGeneratedUsers()
+    {
+        $users = PermitUser::whereNotNull('qr_code_identifier')->get();
+        $qrData = [];
+
+        foreach ($users as $user) {
+            $url = route('qr.show', ['identifier' => $user->qr_code_identifier]);
+            $qr = QrCode::size(150)->generate($url);
+
+            $qrData[] = [
+                'user' => $user,
+                'qr' => $qr,
+                'url' => $url
+            ];
+        }
+
+        return view('qr.generated', compact('qrData'));
+    }
+
+
     public function showUserByQr($identifier)
     {
         $user = PermitUser::where('qr_code_identifier', $identifier)->first();
@@ -71,13 +91,5 @@ class QRCodeController extends Controller
 
         return view('qr.user', compact('user'));
     }
-
-    public function exportPDF()
-    {
-        $users = PermitUser::whereNotNull('qr_code_identifier')->get();
-        $pdf = PDF::loadView('qr.pdf', compact('users'));
-        return $pdf->download('permit_qr_codes.pdf');
-    }
-
 
 }
