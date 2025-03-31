@@ -19,6 +19,7 @@ class PermitUser extends Model
         'date_expiry',
         'vehicle_types',
         'qr_code_identifier',
-        'printed'
+        'printed',
+        'is_valid'
     ];
 }
