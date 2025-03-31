@@ -8,6 +8,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Poppins:wght@400&display=swap"
         rel="stylesheet">
 
@@ -87,6 +89,29 @@
         table td {
             vertical-align: middle !important;
         }
+
+
+        .custom-alert-blocked {
+            background-color: #431a24;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 20px auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-alert-blocked .icon i {
+            color: #8c7be4;
+        }
+
+        .custom-alert-blocked .text-light-emphasis {
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .custom-alert-blocked .text-muted {
+            color: #f2f2f2;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -103,7 +128,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="btn btn-sm text-white" style="font-size: 13px; font-weight: 300;">
-                       Logout
+                        Logout
                     </button>
                 </form>
             @endif
@@ -128,7 +153,7 @@
                 </div>
 
                 <div class="text-center d-block d-md-none">
-                    <h6 class="m-0 fw-bold text-white">Republic of Sri Lanka (CEYLON)</h6>
+                    <h6 class="m-0 fw-bold text-white">Automobile Association of Ceylon</h6>
                 </div>
 
                 <img src="{{ asset('images/FIA Logo.jpg') }}" alt="FIA logo" class="logo">
@@ -143,7 +168,7 @@
         <div class="container">
             <div class="row text-center text-md-start">
                 <div class="col-md-6">
-                    <p><strong>The Automobile Association of Ceylon – Sri Lanka</strong></p>
+                    <p><strong>Automobile Association of Ceylon – Sri Lanka</strong></p>
                     <p>40, Sir Mohamed Macan Marker Mawatha, Colombo 03, Sri Lanka.</p>
                 </div>
                 <div class="col-md-3">

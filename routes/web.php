@@ -33,3 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/qr-code/mark-printed', [App\Http\Controllers\QRCodeController::class, 'markAsPrinted'])
         ->name('qr.markAsPrinted');
 });
+
+
+Route::put('/users/{id}', [QRCodeController::class, 'update'])->name('users.update');

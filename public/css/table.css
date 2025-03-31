@@ -112,3 +112,107 @@
     border-radius: 4px;
     font-size: 12px;
 }
+
+
+
+.badge-invalid {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Modal Header */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 1.5rem;
+    color: #555;
+}
+
+/* QR Modal Style */
+.modal-content.text-center .modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Input Field Styling */
+.modal-body .form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease-in-out;
+}
+
+.modal-body .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+
+/* Form Switch */
+.form-check.form-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+    font-weight: 500;
+    color: #444;
+}
+
+/* Footer Buttons */
+.modal-footer .btn {
+    border-radius: 6px;
+    padding: 0.4rem 1.2rem;
+    font-weight: 500;
+}
+
+.badge-status {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-printed {
+    background-color: #198754;
+    color: white;
+}
+
+.badge-generated {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.badge-invalid {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-pending {
+    background-color: #6c757d;
+    color: white;
+}
+
+.modal-content {
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+

@@ -1,11 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="container my-5">
+<main class="container my-5">
+
+
+        @if (!$user->is_valid)
+        <div class="custom-alert-blocked d-flex align-items-start p-3 rounded">
+            <div class="icon me-3 mt-1">
+                <i class="bi bi-x-circle-fill fs-5 text-danger"></i>
+            </div>
+            <div class="content">
+                <div class="fw-semibold text-white">Your QR is Invalid</div>
+                <div class="small text-secondary">Please contact us for further assistance</div>
+            </div>
+        </div>
+
+
+        @else
         <div class="card shadow mx-auto" style="max-width: 900px;">
             <div class="card-header text-center">
                 <h4 class="fw-bold mb-0">Permit Holder Information</h4>
             </div>
+
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-md-5 fw-semibold">Surname</div>
@@ -41,5 +57,8 @@
                 </div>
             </div>
         </div>
-    </main>
+        @endif
+
+
+</main>
 @endsection
