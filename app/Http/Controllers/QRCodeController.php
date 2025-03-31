@@ -27,8 +27,8 @@ class QRCodeController extends Controller
         }
 
         return view('qr.user', compact('user'));
-
     }
+
 
     public function markAsPrinted(Request $request)
     {
@@ -41,6 +41,28 @@ class QRCodeController extends Controller
             'status' => 'success',
             'updated_ids' => $userIds
         ]);
+    }
+    public function update(Request $request, $id)
+    {
+        $user = PermitUser::findOrFail($id);
+
+        $validated = $request->validate([
+            'first_names' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'dob' => 'nullable|date',
+            'sl_license_no' => 'required|string',
+            'int_permit_no' => 'required|string',
+            'date_issued' => 'required|date',
+            'date_expiry' => 'nullable|date',
+            'vehicle_types' => 'required|string',
+        ]);
+
+        // Handle the toggle (it won't be sent if unchecked, so use default false)
+        $validated['is_valid'] = $request->has('is_valid');
+
+        $user->update($validated);
+
+        return redirect()->back()->with('success', 'User updated successfully.');
     }
 
 
