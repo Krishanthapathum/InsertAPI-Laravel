@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PermitUser;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+
 
 class PermitUserController extends Controller
 {
@@ -12,13 +14,13 @@ class PermitUserController extends Controller
     {
         // Step 1: Validate input
         $validator = Validator::make($request->all(), [
-            'last_name' => 'required|string',
+            'last_name' => 'nullable|string',
             'first_names' => 'required|string',
-            'dob' => 'required|date',
+            'dob' => 'nullable|date',
             'sl_license_no' => 'nullable|string',
             'int_permit_no' => 'nullable|string',
             'date_issued' => 'required|date',
-            'date_expiry' => 'required|date',
+            'date_expiry' => 'nullable|date',
             'vehicle_types' => 'required|string',
         ]);
 
@@ -54,6 +56,11 @@ class PermitUserController extends Controller
         $identifierDigit = $position !== false ? $position : 0;
         $qrIdentifier = $combined . $identifierDigit;
 
+        // If date_expiry not provided, calculate 1 year from date_issued
+        $dateIssued = Carbon::parse($request->date_issued);
+        $dateExpiry = $request->filled('date_expiry') ? $request->date_expiry : $dateIssued->copy()->addYear()->toDateString();
+
+
         // Step 5: Store new user along with qr_code_identifier
         $user = PermitUser::create([
             'last_name' => $request->last_name,
@@ -62,7 +69,7 @@ class PermitUserController extends Controller
             'sl_license_no' => $request->sl_license_no,
             'int_permit_no' => $request->int_permit_no,
             'date_issued' => $request->date_issued,
-            'date_expiry' => $request->date_expiry,
+            'date_expiry' => $dateExpiry,
             'vehicle_types' => $request->vehicle_types,
             'qr_code_identifier' => $qrIdentifier
         ]);
