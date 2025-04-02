@@ -7,7 +7,6 @@ use App\Models\PermitUser;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-
 class PermitUserController extends Controller
 {
     public function store(Request $request)
@@ -31,7 +30,7 @@ class PermitUserController extends Controller
             ], 422);
         }
 
-        // Step 2: Use int_permit_no or sl_license_no as identifier
+        // Step 2: Determine identifier
         $identifierField = $request->filled('int_permit_no') ? 'int_permit_no' : 'sl_license_no';
         $identifierValue = $request->{$identifierField};
 
@@ -39,47 +38,58 @@ class PermitUserController extends Controller
             return response()->json(['message' => 'Either int_permit_no or sl_license_no is required.'], 422);
         }
 
-        // Step 3: Check if user already exists
-        $existingUser = PermitUser::where($identifierField, $identifierValue)->first();
-
-        if ($existingUser) {
-            return response()->json([
-                'message' => 'User already exists.',
-            ], 200);
-        }
-
-        // Step 4: Generate QR code identifier BEFORE storing
-        $prefix = rand(100, 999999); // Random 3–6 digit prefix
-        $permit = $request->int_permit_no ?: $request->sl_license_no;
-        $combined = $prefix . $permit;
-        $position = strpos($combined, $permit);
-        $identifierDigit = $position !== false ? $position : 0;
-        $qrIdentifier = $combined . $identifierDigit;
-
-        // If date_expiry not provided, calculate 1 year from date_issued
+        // Step 3: Calculate expiry date if not provided
         $dateIssued = Carbon::parse($request->date_issued);
         $dateExpiry = $request->filled('date_expiry') ? $request->date_expiry : $dateIssued->copy()->addYear()->toDateString();
 
+        // Step 4: Find existing user
+        $user = PermitUser::where($identifierField, $identifierValue)->first();
 
-        // Step 5: Store new user along with qr_code_identifier
-        $user = PermitUser::create([
-            'last_name' => $request->last_name,
-            'first_names' => $request->first_names,
-            'dob' => $request->dob,
-            'sl_license_no' => $request->sl_license_no,
-            'int_permit_no' => $request->int_permit_no,
-            'date_issued' => $request->date_issued,
-            'date_expiry' => $dateExpiry,
-            'vehicle_types' => $request->vehicle_types,
-            'qr_code_identifier' => $qrIdentifier
-        ]);
+        // Step 5: If exists → update, else → create
+        if ($user) {
+            $user->update([
+                'last_name' => $request->last_name,
+                'first_names' => $request->first_names,
+                'dob' => $request->dob,
+                'sl_license_no' => $request->sl_license_no,
+                'int_permit_no' => $request->int_permit_no,
+                'date_issued' => $request->date_issued,
+                'date_expiry' => $dateExpiry,
+                'vehicle_types' => $request->vehicle_types,
+            ]);
 
-        // Step 6: Respond with stored data and qr identifier
-        return response()->json([
-            'message' => 'User stored and QR identifier generated successfully.',
-            'qr_identifier' => $qrIdentifier,
-            'data' => $user
-        ], 201);
+            return response()->json([
+                'message' => 'User already existed and was updated.',
+                'data' => $user
+            ], 200);
+        } else {
+            // Step 6: Generate QR Code Identifier
+            $prefix = rand(100, 999999);
+            $permit = $request->int_permit_no ?: $request->sl_license_no;
+            $combined = $prefix . $permit;
+            $position = strpos($combined, $permit);
+            $identifierDigit = $position !== false ? $position : 0;
+            $qrIdentifier = $combined . $identifierDigit;
+
+            // Step 7: Create new user
+            $user = PermitUser::create([
+                'last_name' => $request->last_name,
+                'first_names' => $request->first_names,
+                'dob' => $request->dob,
+                'sl_license_no' => $request->sl_license_no,
+                'int_permit_no' => $request->int_permit_no,
+                'date_issued' => $request->date_issued,
+                'date_expiry' => $dateExpiry,
+                'vehicle_types' => $request->vehicle_types,
+                'qr_code_identifier' => $qrIdentifier
+            ]);
+
+            return response()->json([
+                'message' => 'User stored and QR identifier generated successfully.',
+                'qr_identifier' => $qrIdentifier,
+                'data' => $user
+            ], 201);
+        }
     }
 
     public function findByPermit($int_permit_no)
