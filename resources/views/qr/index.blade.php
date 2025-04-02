@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        function sortIcon($column, $sortBy, $order)
+        {
+            if ($sortBy === $column) {
+                return $order === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down';
+            }
+            return 'bi bi-arrow-down-up'; // default icon
+        }
+
+        function sortLink($column, $sortBy, $order)
+        {
+            $newOrder = $sortBy === $column && $order === 'asc' ? 'desc' : 'asc';
+            return request()->fullUrlWithQuery(['sort_by' => $column, 'order' => $newOrder]);
+        }
+    @endphp
 
     <head>
         <link href="{{ asset('css/table.css') }}" rel="stylesheet">
@@ -20,10 +35,19 @@
             <thead>
                 <tr>
                     <th><input type="checkbox" id="selectAll"></th>
-                    <th>No</th>
+                    {{-- <th>ID</th> --}}
+                    <th>
+                        <a href="{{ sortLink('Id', $sortBy, $order) }}" class="text-decoration-none text-dark">
+                            ID <i class="{{ sortIcon('id', $sortBy, $order) }}"></i>
+                        </a>
+                    </th>
                     <th>Name</th>
                     <th>SL License</th>
-                    <th>INT Permit</th>
+                    <th>
+                        <a href="{{ sortLink('int_permit_no', $sortBy, $order) }}" class="text-decoration-none text-dark">
+                            INT Permit <i class="{{ sortIcon('int_permit_no', $sortBy, $order) }}"></i>
+                        </a>
+                    </th>
                     <th>Vehicle Type</th>
                     <th>Status</th>
                     <th class="text-center">Actions</th>
@@ -33,7 +57,8 @@
                 @foreach ($users as $index => $user)
                     <tr>
                         <td><input type="checkbox" class="select-user" data-id="{{ $user->id }}"></td>
-                        <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td>
+                        {{-- <td>{{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}</td> --}}
+                        <td>{{ $user->id }}</td>
                         <td>{{ $user->first_names }} {{ $user->last_name }}</td>
                         <td>{{ $user->sl_license_no }}</td>
                         <td>{{ $user->int_permit_no }}</td>
@@ -76,8 +101,10 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content text-center">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="qrModalLabel{{ $user->id }}">QR Code - {{ $user->first_names }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title" id="qrModalLabel{{ $user->id }}">QR Code -
+                                        {{ $user->first_names }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     @php
@@ -88,7 +115,8 @@
                                         {!! QrCode::size(200)->generate($qrLink) !!}
                                     </a>
 
-                                    <a href="{{ $qrLink }}" target="_blank" class="mt-2 small text-decoration-none d-block text-primary">
+                                    <a href="{{ $qrLink }}" target="_blank"
+                                        class="mt-2 small text-decoration-none d-block text-primary">
                                         {{ $qrLink }}
                                     </a>
                                 </div>
@@ -121,79 +149,40 @@
                     </div>
 
                     <!-- Edit Modal -->
-                    <!-- Edit Modal -->
                     <div class="modal fade" id="editModal{{ $user->id }}" tabindex="-1"
                         aria-labelledby="editModalLabel{{ $user->id }}" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-lg for wider layout -->
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
                             <form method="POST" action="{{ route('users.update', $user->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel{{ $user->id }}">Edit User</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+
+                                <div class="modal-content shadow-lg">
+                                    <div class="modal-header text-white">
+                                        <h5 class="modal-title" id="editModalLabel{{ $user->id }}">
+                                            <i class="bi bi-pencil-square me-2"></i>Edit User
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="form-check form-switch mb-4">
+
+                                    <div class="modal-body px-4 py-4">
+                                        <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" name="is_valid"
                                                 id="isValidSwitch{{ $user->id }}"
                                                 {{ $user->is_valid ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="isValidSwitch{{ $user->id }}">
+                                            <label class="form-check-label ms-2" for="isValidSwitch{{ $user->id }}">
                                                 Mark QR as Valid
                                             </label>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label>First Names</label>
-                                                <input type="text" class="form-control" name="first_names"
-                                                    value="{{ $user->first_names }}">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label>Last Name</label>
-                                                <input type="text" class="form-control" name="last_name"
-                                                    value="{{ $user->last_name }}">
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label>DOB</label>
-                                                <input type="date" class="form-control" name="dob"
-                                                    value="{{ $user->dob }}">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label>SL License No</label>
-                                                <input type="text" class="form-control" name="sl_license_no"
-                                                    value="{{ $user->sl_license_no }}">
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label>INT Permit No</label>
-                                                <input type="text" class="form-control" name="int_permit_no"
-                                                    value="{{ $user->int_permit_no }}">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label>Date Issued</label>
-                                                <input type="date" class="form-control" name="date_issued"
-                                                    value="{{ $user->date_issued }}">
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label>Date Expiry</label>
-                                                <input type="date" class="form-control" name="date_expiry"
-                                                    value="{{ $user->date_expiry }}">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label>Vehicle Types</label>
-                                                <input type="text" class="form-control" name="vehicle_types"
-                                                    value="{{ $user->vehicle_types }}">
-                                            </div>
-                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cancel</button>
+
+                                    <div class="modal-footer px-4 py-3 bg-light border-top">
+                                        <button type="submit" class="btn btn-success">
+                                            Save Changes
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
                                     </div>
                                 </div>
                             </form>

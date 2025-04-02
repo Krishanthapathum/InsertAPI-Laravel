@@ -10,12 +10,27 @@ use PDF;
 
 class QRCodeController extends Controller
 {
-    public function index()
-    {
+    // public function index()
+    // {
 
-        $users = PermitUser::whereNotNull('qr_code_identifier')->paginate(10);
-        return view('qr.index', compact('users'));
+    //     $users = PermitUser::whereNotNull('qr_code_identifier')->paginate(10);
+    //     return view('qr.index', compact('users'));
+
+    // }
+
+    public function index(Request $request)
+    {
+        $sortBy = $request->query('sort_by', 'created_at'); // default sort
+        $order = $request->query('order', 'desc'); // default order
+
+        $users = PermitUser::whereNotNull('qr_code_identifier')
+            ->orderBy($sortBy, $order)
+            ->paginate(10)
+            ->appends(['sort_by' => $sortBy, 'order' => $order]); // preserve on links
+
+        return view('qr.index', compact('users', 'sortBy', 'order'));
     }
+
 
 
     public function showUserByQr($identifier)
@@ -46,16 +61,6 @@ class QRCodeController extends Controller
     {
         $user = PermitUser::findOrFail($id);
 
-        $validated = $request->validate([
-            'first_names' => 'nullable|string',
-            'last_name' => 'nullable|string',
-            'dob' => 'nullable|date',
-            'sl_license_no' => 'required|string',
-            'int_permit_no' => 'required|string',
-            'date_issued' => 'required|date',
-            'date_expiry' => 'nullable|date',
-            'vehicle_types' => 'required|string',
-        ]);
 
         // Handle the toggle (it won't be sent if unchecked, so use default false)
         $validated['is_valid'] = $request->has('is_valid');

@@ -3,20 +3,37 @@
 @section('content')
 <main class="container my-5">
 
+    @php
+        use Carbon\Carbon;
+        $isExpired = Carbon::parse($user->date_expiry)->isPast();
+    @endphp
 
-        @if (!$user->is_valid)
-        <div class="custom-alert-blocked d-flex align-items-start p-3 rounded">
+    {{-- If QR is invalid --}}
+    @if (!$user->is_valid)
+        <div class="custom-alert-blocked d-flex align-items-start p-3 rounded bg-danger">
             <div class="icon me-3 mt-1">
-                <i class="bi bi-x-circle-fill fs-5 text-danger"></i>
+                <i class="bi bi-x-circle-fill fs-5 text-white"></i>
             </div>
             <div class="content">
                 <div class="fw-semibold text-white">Your QR is Invalid</div>
-                <div class="small text-secondary">Please contact us for further assistance</div>
+                <div class="small text-light">Please contact us for further assistance</div>
             </div>
         </div>
 
+    {{-- If QR is valid but expired --}}
+    @elseif ($isExpired)
+        <div class="custom-alert-blocked d-flex align-items-start p-3 rounded bg-warning">
+            <div class="icon me-3 mt-1">
+                <i class="bi bi-exclamation-triangle-fill fs-5 text-dark"></i>
+            </div>
+            <div class="content">
+                <div class="fw-semibold text-dark">Your Permit Has Expired</div>
+                <div class="small text-muted">Please renew your permit or contact support for assistance.</div>
+            </div>
+        </div>
 
-        @else
+    {{-- If QR is valid and not expired --}}
+    @else
         <div class="card shadow mx-auto" style="max-width: 900px;">
             <div class="card-header text-center">
                 <h4 class="fw-bold mb-0">Permit Holder Information</h4>
@@ -57,8 +74,7 @@
                 </div>
             </div>
         </div>
-        @endif
-
+    @endif
 
 </main>
 @endsection

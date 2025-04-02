@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>AACeylon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('images/AAC Logo.jpg') }}" type="image/jpeg">
+
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -164,30 +166,43 @@
 
     @yield('content')
 
-    <footer class="py-4 mt-auto">
+    <footer class="py-4 mt-auto " style="background-color: #000;">
         <div class="container">
             <div class="row text-center text-md-start">
-                <div class="col-md-6">
-                    <p><strong>Automobile Association of Ceylon – Sri Lanka</strong></p>
-                    <p>40, Sir Mohamed Macan Marker Mawatha, Colombo 03, Sri Lanka.</p>
+                <!-- Left Column -->
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h6 class="fw-bold">Issued At</h6>
+                    <p class="mb-1">The Automobile Association of Ceylon – Sri Lanka</p>
+                    <p class="mb-0">40, Sir Mohamed Macan Marker Mawatha, Colombo 03, Sri Lanka.</p>
                 </div>
-                <div class="col-md-3">
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-telephone-fill"></i> +94 2446 074 | +94 2421 528-9</li>
-                        <li><i class="bi bi-printer-fill"></i> +94 2446074</li>
+
+                <!-- Middle Column: Contact -->
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <h6 class="fw-bold">Contact</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><i class="bi bi-telephone-fill me-2"></i>+94 2446 074 / +94 2421 528-9</li>
+                        <li><i class="bi bi-printer-fill me-2"></i>+94 2446074</li>
                     </ul>
                 </div>
+
+                <!-- Right Column: Links -->
                 <div class="col-md-3">
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-globe"></i> <a href="https://www.aaceylon.lk"
-                                target="_blank">www.aaceylon.lk</a></li>
-                        <li><i class="bi bi-envelope-fill"></i> <a
-                                href="mailto:aacmotor@sltnet.lk">aacmotor@sltnet.lk</a></li>
+                    <h6 class="fw-bold">Connect</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <i class="bi bi-globe me-2"></i>
+                            <a href="https://www.aaceylon.lk" target="_blank" class="text-warning text-decoration-none">www.aaceylon.lk</a>
+                        </li>
+                        <li>
+                            <i class="bi bi-envelope-fill me-2"></i>
+                            <a href="mailto:aacmotor@sltnet.lk" class="text-warning text-decoration-none">aacmotor@sltnet.lk</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </footer>
+
     @stack('scripts')
 
 </body>
